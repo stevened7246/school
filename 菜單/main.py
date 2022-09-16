@@ -87,7 +87,7 @@ def main():
                 webhook=webhook1,
                 title='菜單提醒',
                 content='菜單已更新',
-                username="沙雕bot")
+                username="ben don bot")
     else:
         log('第一次運行')
     
