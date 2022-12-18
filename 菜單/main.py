@@ -51,9 +51,8 @@ def log(str1='',logfile='./log.txt'):
 def main():
     log(time.strftime("%Y{}%m{}%d{} %H{}%M{}%S{}").format("年","月","日","时","分","秒")+'\n')
     
-    try:
-        webhook1=os.getenv('webhook')
-    except:
+    webhook1=os.getenv('webhook')
+    if webhook1==None:
         log('環境變量有問題，請檢查')
         exit()
     
@@ -61,8 +60,15 @@ def main():
 
     data=getdata()
     #分解列表
-    outdate=''
+    out=''
     for i in data:
+        
+        if i=='data1':
+            out+='向陽'
+        if i=='data2':
+            out+='正園\n'
+        if i=='data3':
+            out+='芳味香\n'
         datas=data[i]
         #標題處理
         if i=='data':
@@ -73,31 +79,34 @@ def main():
             del datas[0]
         
         del datas[0]#統一處理標題
-
+        
         for i1 in  datas:#處理每餐資料
             
-            out=''
+            temp=''
             del i1[3:]
             a=0
+
             for i2 in i1:
                 
                 if type(i2)==str:
                     if a==0:
-                        i2=str(i2).replace(' ','').replace('炸物日','').replace('()','')+' '
+                        i2=str(i2).replace(' ','').replace('炸物日','').replace('()','').replace('A','Ａ').replace('B','Ｂ')+' '
                     if a==1:
                         i2=str(i2).replace(' ','').replace('55元','')+' '
                     if a==2:
-                        i2=i2.split(' ', 1)[0]
-                    out+=i2
+                        i2=i2.split(' ', 1)[0].replace('*','x')
+                    temp+=i2
 
                 if i2==None:
-                    out+='           '
+                    temp+='            '
                 
                 a+=1
-            print(out)
 
+            out=out+temp+'\n'
+            # print(temp)
+        out+='\n'
 
-        print()
+    print(out)
     
     if len(data['data'])==26:
         datatime=str(eval(data['data'][5:8])+1911)+data['data'][8:15]
@@ -110,8 +119,8 @@ def main():
         log('菜單數據異動')
         notify('discord',
         webhook=webhook1,
-        title='菜單提醒',
-        content='菜單已更新',
+        title='菜單更新',
+        content=f"```{out}```",
         username="ben don bot")
     
 
