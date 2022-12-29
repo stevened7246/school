@@ -121,7 +121,7 @@ def main():
         webhook=webhook1,
         title='菜單更新',
         content=f"```{out}```",
-        username="ben don bot")
+        username="蘿莉廚師")
     
 
 
