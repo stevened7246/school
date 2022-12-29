@@ -107,12 +107,12 @@ def main():
         out+='\n'
 
     print(out)
-    
+
     if len(data['data'])==26:
         datatime=str(eval(data['data'][5:8])+1911)+data['data'][8:15]
     else:
-        datatime=str(eval(data['data'][5:8])+1911)+'年0'+data['data'][9:14]
-
+        datatime=str(eval(data['data'][5:8])+1911)+'年0'+data['data'][9:14].replace('～','')
+    print(datatime)
     if (time.strptime(datatime,'%Y年%m月%d日')<time.localtime()) and devmode==0:
         log('菜單數據無變化')
     else:
