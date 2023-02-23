@@ -3,7 +3,7 @@ from io import BytesIO
 from bs4 import BeautifulSoup
 from deta import Deta
 from onepush import notify
-devmode=True
+devmode=False
 DATA_KEY="csic_menu1"
 def dp(url):#傳入PDF解碼後的list
     prefix=['A', 'B', '晚']
@@ -92,10 +92,12 @@ def main():
             if datatime['date']==menutime: print('菜單未更新')
             else:
                 text=default()
+                print(f'菜單已更新\n\n{text}')
                 message(text,webhook=webhook)
                 print(data.put({"date":menutime,"key":DATA_KEY}))
         else:
             text=default()
+            print(f'第一次執行\n\n{text}')
             message(text,webhook=webhook)
             print(data.put({"date":menutime,"key":DATA_KEY}))
 
