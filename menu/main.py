@@ -37,9 +37,16 @@ def dp(url):#傳入PDF解碼後的list
 
                     else:
                         if j[0] in prefix: temp=j[0]
+                        elif len(j)<3:
+                            if len(data)>0:
+                                data.pop()
+                                c-=1
                         elif temp in prefix:
                             data[c]['data'][temp]=j
                             temp=''
+                elif len(data)>0:
+                    data.pop()
+                    c-=1
             b+=1
     return data
 
@@ -102,8 +109,8 @@ def main():
             print(data.put({"date":menutime,"key":DATA_KEY}))
 
     else:
-        text=default()
-        message(text,webhook=webhook)
+        for i in range(1,4):
+            for j in dp(f'http://www2.csic.khc.edu.tw/store/data/{i}.pdf'):print(j)
 
 
 
