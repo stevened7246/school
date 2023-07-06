@@ -29,20 +29,22 @@ def log(str1='',logfile='./log.txt'):
     logfile.close()
 
 def getdata(username,password):
-    a=requests.get('https://www.csic.khc.edu.tw/website/into/index.asp')
+    a=requests.get('https://www.csic.khc.edu.tw/abc/sb/LOGIN.ASP')
 
     headers1 = dict()
+    print(a.headers['Set-Cookie'].split(';')[0])
     headers1["cookie"]=a.headers['Set-Cookie'].split(';')[0]
 
-    params={'T1a':username,'T2':password,'D1':'stu','B1':'%E7%A2%BA%E5%AE%9A','url9':''}
+    
+    params={'txtSnum':username,'txtPassword':password,'tctChk':'Y'}
 
-    requests.post('https://www.csic.khc.edu.tw/website/into/login9.asp',params=params,headers=headers1)
-    a=hash_sha("https://www.csic.khc.edu.tw/website/into/student/attend/Attendance.asp",headers1)
-    b=hash_sha('https://www.csic.khc.edu.tw/website/into/student/attend/VEDiscipline.asp',headers1)
-    data=dict()
-    data['data1']=a
-    data['data2']=b
-    return data
+    a=requests.post('https://www.csic.khc.edu.tw/abc/sb/login_chk.ASP',params=params,headers=headers1)
+    print(a.headers.keys())
+    headers1['referer']='https://www.csic.khc.edu.tw/abc/sb/LOGIN.ASP'
+    a.encoding='utf-8'
+
+    print(a)
+    return a.text.replace('http://www.csic.khc.edu.tw/into/student/photoup/ssn/S125815656.JPG','https://www.csic.khc.edu.tw/into/student/photoup/ssn/S125815656.JPG').replace('<meta http-equiv="refresh" content="5;url=index.html">','').replace('<!--','//<!--')
 
 def main():
     
@@ -61,13 +63,15 @@ def main():
     data=getdata(username,password)
 
     jsonfilestatus=False
-    if os.path.isfile('data.json'):
-        jsonfilesize=os.path.getsize('./data.json')
+    if os.path.isfile('index.html'):
+        jsonfilesize=os.path.getsize('./index.html')
         log("json大小："+str(jsonfilesize))
+
+        jsonfilesize=0
 
         if jsonfilesize>0:#json內部有數據
             jsonfilestatus=True
-            jsonfile=open('data.json','r',encoding='utf8')
+            jsonfile=open('index.html','r',encoding='utf8')
             jsondata=json.loads(jsonfile.read())
             jsonfile.close()
 
@@ -93,9 +97,9 @@ def main():
     
 
 
-    jsonfile=open('data.json','w+',encoding='utf8')
-    v=json.dumps(data)
-    jsonfile.write(v)
+    jsonfile=open('index.html','w+',encoding='utf8')
+    # v=json.dumps(data)
+    jsonfile.write(data)
     # jsondata=jsonfile.read()
     jsonfile.close()
 
